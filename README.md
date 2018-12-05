@@ -2,6 +2,8 @@
 
 This repository contains a sample backend code that demonstrates how to generate a Virgil JWT using the [Golang SDK](https://github.com/go-virgil/virgil)
 
+> Do not use this authentication in production. Requests to a /virgil-jwt endpoint must be allowed for authenticated users. Use your application authorization strategy.
+
 ## Prerequisites
 - [Go aka Golang](https://golang.org/) 
 - [Virgil Security GO SDK](https://github.com/go-virgil/virgil/tree/v5)
