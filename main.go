@@ -25,7 +25,7 @@ var (
 
 func main() {
 	cryptoInstance := virgilCrypto.NewVirgilCrypto()
-	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("API_PRIVATE_KEY")), "")
+	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("API_KEY")), "")
 
 	http.HandleFunc("/authenticate", auth)
 	http.HandleFunc("/virgil-jwt", provideJWT)

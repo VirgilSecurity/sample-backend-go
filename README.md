@@ -29,7 +29,7 @@ To generate a JWT the following values are required:
 
 | Variable Name                     | Description                    |
 |-----------------------------------|--------------------------------|
-| API_PRIVATE_KEY                  | Private key of your API key that is used to sign the JWTs. |
+| API_KEY                  | Private key of your API key that is used to sign the JWTs. |
 | API_KEY_ID               | ID of your API key. A unique string value that identifies your account in the Virgil Cloud. |
 | APP_ID                   | ID of your Virgil Application. |
 
@@ -93,7 +93,7 @@ import (
 )
 
 	cryptoInstance := virgilCrypto.NewVirgilCrypto()
-	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("API_PRIVATE_KEY")), "")
+	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("API_KEY")), "")
 	[...]
 	tokenSigner := virgilCrypto.NewVirgilAccessTokenSigner()
 	generator := virgilSDK.NewJwtGenerator(cryptoPrivateKey, os.Getenv("API_KEY_ID"), tokenSigner, os.Getenv("APP_ID"), time.Hour)
