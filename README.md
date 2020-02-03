@@ -29,8 +29,8 @@ To generate a JWT the following values are required:
 
 | Variable Name                     | Description                    |
 |-----------------------------------|--------------------------------|
-| API_KEY                  | Private key of your API key that is used to sign the JWTs. |
-| API_KEY_ID               | ID of your API key. A unique string value that identifies your account in the Virgil Cloud. |
+| APP_KEY                  | Private key of your API key that is used to sign the JWTs. |
+| APP_KEY_ID               | ID of your API key. A unique string value that identifies your account in the Virgil Cloud. |
 | APP_ID                   | ID of your Virgil Application. |
 
 ## Add Virgil Credentials to .env

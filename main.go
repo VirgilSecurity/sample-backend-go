@@ -25,7 +25,7 @@ var (
 
 func main() {
 	cryptoInstance := virgilCrypto.NewVirgilCrypto()
-	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("API_KEY")), "")
+	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("APP_KEY")), "")
 
 	http.HandleFunc("/authenticate", auth)
 	http.HandleFunc("/virgil-jwt", provideJWT)
@@ -108,6 +108,6 @@ func isTokenExists(token string) bool {
 
 func generateJWT(identity string) (*virgilSDK.Jwt, error) {
 	tokenSigner := virgilCrypto.NewVirgilAccessTokenSigner()
-	generator := virgilSDK.NewJwtGenerator(cryptoPrivateKey, os.Getenv("API_KEY_ID"), tokenSigner, os.Getenv("APP_ID"), time.Hour)
+	generator := virgilSDK.NewJwtGenerator(cryptoPrivateKey, os.Getenv("APP_KEY_ID"), tokenSigner, os.Getenv("APP_ID"), time.Hour)
 	return generator.GenerateToken(identity, nil)
 }
