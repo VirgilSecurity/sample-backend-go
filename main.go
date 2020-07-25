@@ -11,21 +11,20 @@ import (
 	"sync"
 	"time"
 
-	"gopkg.in/virgil.v5/cryptoapi"
-	virgilSDK "gopkg.in/virgil.v5/sdk"
-	virgilCrypto "gopkg.in/virgilsecurity/virgil-crypto-go.v5"
+	"github.com/VirgilSecurity/virgil-sdk-go/v6/crypto"
+	"github.com/VirgilSecurity/virgil-sdk-go/v6/session"
 )
 
 var (
 	userStorage sync.Map
 
-	cryptoInstance   *virgilCrypto.ExternalCrypto
-	cryptoPrivateKey cryptoapi.PrivateKey
+	cryptoInstance   *crypto.Crypto
+	cryptoPrivateKey crypto.PrivateKey
 )
 
 func main() {
-	cryptoInstance := virgilCrypto.NewVirgilCrypto()
-	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("APP_KEY")), "")
+	cryptoInstance := &crypto.Crypto{}
+	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("APP_KEY")))
 
 	http.HandleFunc("/authenticate", auth)
 	http.HandleFunc("/virgil-jwt", provideJWT)
@@ -60,7 +59,7 @@ func auth(w http.ResponseWriter, r *http.Request) {
 func provideJWT(w http.ResponseWriter, r *http.Request) {
 	authHeaders := strings.Fields(r.Header.Get("Authorization"))
 
-	if 2 < len(authHeaders) || "Bearer" != authHeaders[0] || !isTokenExists(authHeaders[1]) {
+	if 2 < len(authHeaders) || "Bearer" != authHeaders[0] || !tokenExists(authHeaders[1]) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -101,13 +100,13 @@ func storageGet(token string) string {
 	return ""
 }
 
-func isTokenExists(token string) bool {
+func tokenExists(token string) bool {
 	_, ok := userStorage.Load(token)
 	return ok
 }
 
-func generateJWT(identity string) (*virgilSDK.Jwt, error) {
-	tokenSigner := virgilCrypto.NewVirgilAccessTokenSigner()
-	generator := virgilSDK.NewJwtGenerator(cryptoPrivateKey, os.Getenv("APP_KEY_ID"), tokenSigner, os.Getenv("APP_ID"), time.Hour)
+func generateJWT(identity string) (*session.Jwt, error) {
+	tokenSigner := &session.VirgilAccessTokenSigner{}
+	generator := &session.JwtGenerator{AppKey: cryptoPrivateKey, AppKeyID: os.Getenv("APP_KEY_ID"), AppID: os.Getenv("APP_ID"), AccessTokenSigner: tokenSigner, TTL: time.Hour}
 	return generator.GenerateToken(identity, nil)
 }
