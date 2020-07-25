@@ -15,11 +15,7 @@ Clone the repository from GitHub.
 ```
 $ git clone https://github.com/VirgilSecurity/sample-backend-go.git
 ```
-Go to virgil-crypto library directory and build it:
-```
-$ cd sample-backend-go/vendor/gopkg.in/virgilsecurity/virgil-crypto-go.v5
-$ make
-```
+
 
 ## Get Virgil Credentials
 
@@ -88,16 +84,22 @@ To generate JWT, you need to use the `JwtGenerator` class from the SDK.
 
 ```go
 import (
-	virgilSDK "gopkg.in/virgil.v5/sdk"
-	virgilCrypto "gopkg.in/virgilsecurity/virgil-crypto-go.v5"
+	"github.com/VirgilSecurity/virgil-sdk-go/v6/crypto"
+	"github.com/VirgilSecurity/virgil-sdk-go/v6/session"
 )
 
-	cryptoInstance := virgilCrypto.NewVirgilCrypto()
-	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("API_KEY")), "")
+	cryptoInstance := &crypto.Crypto{}
+	cryptoPrivateKey, _ = cryptoInstance.ImportPrivateKey([]byte(os.Getenv("APP_KEY")))
 	[...]
-	tokenSigner := virgilCrypto.NewVirgilAccessTokenSigner()
-	generator := virgilSDK.NewJwtGenerator(cryptoPrivateKey, os.Getenv("API_KEY_ID"), tokenSigner, os.Getenv("APP_ID"), time.Hour)
-	jwtToken, err := generator.GenerateToken(identity, nil)
+	tokenSigner := &session.VirgilAccessTokenSigner{}
+	generator := &session.JwtGenerator{
+		AppKey: cryptoPrivateKey,
+		AppKeyID: os.Getenv("APP_KEY_ID"),
+		AppID: os.Getenv("APP_ID"),
+		AccessTokenSigner: tokenSigner,
+		TTL: time.Hour,
+	}
+	return generator.GenerateToken(identity, nil)
 
 ```
 Then you need to provide an HTTP endpoint which will return the JWT with the user's identity as a JSON.
